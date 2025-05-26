@@ -22,6 +22,19 @@
       text-align: center;
       color: #00f9ff;
       padding: 20px;
+      position: relative;
+    }
+    header .branding {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 16px;
+      border-radius: 6px;
+      letter-spacing: 1px;
     }
     header .hero-content {
       background: rgba(0, 0, 0, 0.7);
@@ -136,6 +149,7 @@
 </head>
 <body>
   <header>
+    <div class="branding">ZEETECH</div>
     <div class="hero-content">
       <h1>AI-Driven Cloud Solutions</h1>
       <p>Empowering real-time innovation for a smarter tomorrow.</p>
@@ -184,7 +198,7 @@
     }
 
     socket.on('chatMessage', msg => {
-      appendMessage(`Bot: ${msg}`);
+      appendMessage(msg);
     });
 
     function appendMessage(message) {
