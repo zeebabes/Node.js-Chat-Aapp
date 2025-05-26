@@ -28,3 +28,56 @@
         name: nginx
         state: started
         enabled: yes
+
+    - name: Copy chat app files to EC2
+      copy:
+        src: ./chat-app/
+        dest: /home/ec2-user/chat-app/
+        owner: ec2-user
+        group: ec2-user
+        mode: '0755'
+
+    - name: Install app dependencies
+      shell: npm install
+      args:
+        chdir: /home/ec2-user/chat-app/
+        executable: /bin/bash
+
+    - name: Install PM2 globally
+      shell: npm install -g pm2
+      args:
+        executable: /bin/bash
+
+    - name: Start chat app with PM2
+      shell: |
+        pm2 start app.js --name chat-app
+        pm2 startup
+        pm2 save
+      args:
+        chdir: /home/ec2-user/chat-app/
+        executable: /bin/bash
+
+    - name: Configure Nginx reverse proxy
+      copy:
+        content: |
+          server {
+              listen 80;
+              server_name _;
+              location / {
+                  proxy_pass http://localhost:3000;
+                  proxy_http_version 1.1;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection 'upgrade';
+                  proxy_set_header Host $host;
+                  proxy_cache_bypass $http_upgrade;
+              }
+          }
+        dest: /etc/nginx/conf.d/chatapp.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload Nginx to apply config
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
