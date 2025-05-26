@@ -1,19 +1,23 @@
 const express = require('express');
 const http = require('http');
-const path = require('path');
 const socketIo = require('socket.io');
+const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Serve static files (like index.html) from the current directory
+// Serve static files
 app.use(express.static(__dirname));
 
-// WebSocket logic
+// Socket.IO logic
 io.on('connection', socket => {
-    console.log('User connected');
-    socket.on('disconnect', () => console.log('User disconnected'));
+  console.log('User connected');
+  socket.on('chatMessage', msg => {
+    // Echo back for now — you can extend this
+    socket.emit('chatMessage', `Received: ${msg}`);
+  });
+  socket.on('disconnect', () => console.log('User disconnected'));
 });
 
 // Start server
