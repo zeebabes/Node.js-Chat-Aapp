@@ -1,31 +1,22 @@
 ---
-- name: Setup Chat App Server (Amazon Linux 2 - Node.js 16 Safe)
+- name: Setup Chat App Server (Amazon Linux 2023)
   hosts: chat_server
   become: yes
 
   tasks:
-
-    - name: Enable nginx1 via amazon-linux-extras
-      ansible.builtin.shell: amazon-linux-extras enable nginx1
-      args:
-        executable: /bin/bash
-
     - name: Clean yum metadata
       ansible.builtin.shell: yum clean metadata
       args:
         executable: /bin/bash
 
     - name: Install Nginx
-      ansible.builtin.shell: yum install -y nginx
-      args:
-        executable: /bin/bash
+      ansible.builtin.yum:
+        name: nginx
+        state: present
 
-    - name: Install Node.js 16 from NodeSource (safe glibc-compatible)
+    - name: Install Node.js 16 from NodeSource (safe for Amazon Linux 2023)
       ansible.builtin.shell: |
         curl -fsSL https://rpm.nodesource.com/setup_16.x | bash -
-        while fuser /var/run/yum.pid >/dev/null 2>&1; do
-          echo "Waiting for yum lock..."; sleep 3;
-        done
         yum install -y nodejs
       args:
         executable: /bin/bash
