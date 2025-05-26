@@ -10,15 +10,29 @@ const io = socketIo(server);
 // Serve static files
 app.use(express.static(__dirname));
 
-// Socket.IO logic
+const users = {};
+
 io.on('connection', socket => {
-  console.log('User connected');
+  console.log('User connected:', socket.id);
+  users[socket.id] = socket;
+
+  // When user sends a message
   socket.on('chatMessage', msg => {
-    // Echo back for now — you can extend this
-    socket.emit('chatMessage', `Received: ${msg}`);
+    console.log(`User ${socket.id}: ${msg}`);
+    // Echo to admin interface or others
+    socket.broadcast.emit('chatMessage', `User: ${msg}`);
   });
-  socket.on('disconnect', () => console.log('User disconnected'));
+
+  // When admin sends a reply
+  socket.on('adminReply', reply => {
+    console.log(`Admin: ${reply}`);
+    socket.broadcast.emit('chatMessage', `Admin: ${reply}`);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+    delete users[socket.id];
+  });
 });
 
-// Start server
 server.listen(3000, () => console.log('Chat app running on port 3000'));

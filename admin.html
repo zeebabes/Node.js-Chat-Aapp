@@ -1,0 +1,11 @@
+<input type="text" id="adminInput" placeholder="Reply to user..." />
+<button onclick="sendReply()">Send</button>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  function sendReply() {
+    const msg = document.getElementById('adminInput').value;
+    socket.emit('adminReply', msg);
+  }
+</script>
