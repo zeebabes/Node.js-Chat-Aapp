@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>ZEETECH | AI-Driven Cloud Solutions</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -23,6 +23,7 @@
       color: #00f9ff;
       padding: 20px;
       position: relative;
+      z-index: 1;
     }
     header .branding {
       position: absolute;
@@ -102,7 +103,9 @@
       font-weight: bold;
       box-shadow: 0 5px 15px rgba(0,0,0,0.4);
       cursor: pointer;
-      z-index: 9999;
+      z-index: 10000;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .chat-box {
       display: none;
@@ -114,7 +117,7 @@
       border-radius: 10px;
       box-shadow: 0 5px 20px rgba(0,0,0,0.5);
       overflow: hidden;
-      z-index: 9998;
+      z-index: 9999;
     }
     .chat-header {
       background: #00f9ff;
