@@ -1,30 +1,20 @@
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
 const path = require('path');
+const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+// Serve static files (like index.html) from the current directory
 app.use(express.static(__dirname));
 
+// WebSocket logic
 io.on('connection', socket => {
-  console.log('User connected:', socket.id);
-
-  socket.on('chatMessage', msg => {
-    console.log(`User ${socket.id}: ${msg}`);
-    io.emit('chatMessage', `User: ${msg}`);
-  });
-
-  socket.on('adminReply', msg => {
-    console.log(`Admin: ${msg}`);
-    io.emit('chatMessage', `Admin: ${msg}`);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
-  });
+    console.log('User connected');
+    socket.on('disconnect', () => console.log('User disconnected'));
 });
 
+// Start server
 server.listen(3000, () => console.log('Chat app running on port 3000'));
