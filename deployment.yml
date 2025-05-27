@@ -35,20 +35,6 @@
         group: ec2-user
         mode: '0755'
 
-    - name: Copy frontend files (index.html, chat UI) to EC2
-      ansible.builtin.copy:
-        src: "{{ playbook_dir }}/../"
-        dest: /home/ec2-user/chat-app/
-        mode: '0644'
-        owner: ec2-user
-        group: ec2-user
-        recurse: yes
-        exclude:
-          - node_modules
-          - .git
-          - .github
-          - __pycache__
-
     - name: Install app dependencies
       ansible.builtin.shell: npm install
       args:
@@ -93,3 +79,5 @@
       ansible.builtin.service:
         name: nginx
         state: reloaded
+
+        
