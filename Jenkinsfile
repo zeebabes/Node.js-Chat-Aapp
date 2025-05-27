@@ -20,17 +20,10 @@ pipeline {
 
     stage('Deploy with Ansible') {
       steps {
-        sh 'ansible-playbook -i inventory.ini deployment.yml'
+        withCredentials([sshUserPrivateKey(credentialsId: 'ec2-ssh-key', keyFileVariable: 'KEYFILE')]) {
+          sh 'ansible-playbook -i inventory.ini deployment.yml --private-key $KEYFILE'
+        }
       }
-    }
-  }
-
-  post {
-    success {
-      echo ' Deployment complete!'
-    }
-    failure {
-      echo ' Deployment failed.'
     }
   }
 }
