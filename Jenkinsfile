@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Checkout Code') {
       steps {
-        git branch: 'main', url: 'https://github.com/zeebabes/chat-app.git'
+        checkout scm
       }
     }
 
@@ -18,7 +18,7 @@ pipeline {
       }
     }
 
-    stage('Run Ansible Deployment') {
+    stage('Deploy with Ansible') {
       steps {
         sh 'ansible-playbook -i inventory.ini deployment.yml'
       }
@@ -26,11 +26,11 @@ pipeline {
   }
 
   post {
-    failure {
-      echo "Deployment failed"
-    }
     success {
-      echo "Deployment successful"
+      echo ' Deployment complete!'
+    }
+    failure {
+      echo ' Deployment failed.'
     }
   }
 }
