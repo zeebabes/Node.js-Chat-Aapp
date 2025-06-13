@@ -26,8 +26,8 @@ pipeline {
                     usernameVariable: 'SSH_USER'
                 )]) {
                     sh """
-                        ansible-playbook -i inventory.ini deployment.yml \\
-                        --private-key=\$KEYFILE -u \$SSH_USER
+                        ansible-playbook -i inventory.ini deployment.yml \
+                        --private-key=$KEYFILE -u $SSH_USER
                     """
                 }
             }
